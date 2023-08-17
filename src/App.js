@@ -1,7 +1,9 @@
 import React, { Component } from "react";
+
 import Card from "./components/card/card.jsx";
 import CardList from "./components/card-list/card-list.component.jsx";
 import SearchBox from "./components/search-box/search-box.component.jsx";
+
 import "./App.css";
 import "./components/card-list/card-list.styles.css";
 
@@ -10,7 +12,6 @@ class App extends Component {
   //the constructor runs before anything in any class, and this is the universal in OOP.
   constructor() {
     super();
-
     /*
     We are only initializing the state(the state variable(s)) in the constructor,
     nothing else.
@@ -65,7 +66,7 @@ class App extends Component {
         <SearchBox
           onChangeHandler={onSearchChange}
           placeholder="Search Monsters"
-          className = "search-box"
+          className = "monsters-search-box"
         />
         {/* <div className="card-list">
           {filteredMOnsters.map((monster) => (
