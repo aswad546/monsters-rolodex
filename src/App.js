@@ -1,7 +1,8 @@
 import React, { Component } from "react";
-import "./App.css";
 import Card from "./components/card/card.jsx";
-import { CardList } from "./components/card-list/card-list.jsx";
+import CardList from "./components/card-list/card-list.component.jsx";
+import SearchBox from "./components/search-box/search-box.component.jsx";
+import "./App.css";
 import "./components/card-list/card-list.styles.css";
 
 class App extends Component {
@@ -45,14 +46,14 @@ class App extends Component {
     this.setState(() => {
       return { searchField };
     });
-  }
+  };
 
   //2: The render then runs because it runs to determine what to show on the page and
   // to render the initial UI of the component(s) on to the DOM.
   render() {
     //Optimization process to reduce `this.state & this`
     const { monsters, searchField } = this.state;
-    const {onSearchChange} = this;
+    const { onSearchChange } = this;
 
     const filteredMOnsters = monsters.filter((monster) => {
       return monster.name.toLocaleLowerCase().includes(searchField);
@@ -61,18 +62,19 @@ class App extends Component {
     return (
       <div className="App">
         <h1>Monsters Rolodex</h1>
-        <input
-          className="search-box"
-          type="search"
-          placeholder="search monsters"
-          onChange={onSearchChange}
+        <SearchBox
+          onChangeHandler={onSearchChange}
+          placeholder="Search Monsters"
+          className = "search-box"
         />
-        <div className="card-list">
+        {/* <div className="card-list">
           {filteredMOnsters.map((monster) => (
             <Card name={monster.name} id={monster.id} email={monster.email} />
           ))}
-        </div>
-        <button>Change heading </button>
+        </div> */}
+
+        {/*Card list is only for displaying the monsters, what to show or what not to isn't of it's bizz*/}
+        <CardList monsters={filteredMOnsters} />
       </div>
     );
   }
