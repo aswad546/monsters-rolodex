@@ -1,54 +1,76 @@
-import logo from './logo.svg';
-import './App.css';
-import Card from './components/card/card.jsx';
-import './components/card-list/card-list.styles.css';
-
-import React, { Component } from 'react';
-
-import { CardList } from './components/card-list/card-list.jsx';
-
-import './App.css';
-
-
+import React, { Component } from "react";
+import "./App.css";
+import Card from "./components/card/card.jsx";
+import { CardList } from "./components/card-list/card-list.jsx";
+import "./components/card-list/card-list.styles.css";
 
 class App extends Component {
+  //1: This will run first....
+  //the constructor runs before anything in any class, and this is the universal in OOP.
   constructor() {
     super();
 
-    this.state={
-        monsters:[
-          {
-            name: 'Frankenstein',
-            email: 'frank@hotmail.com',
-            id: '1'
-          },
-          {
-            name: 'Dracula',
-            email:'drac@gmail.com',
-            id: '2'
-          },
-          {
-            name: 'Zombie',
-            email: 'zomb@knowledgetech.com',
-            id: '3'
-          },
-        ],
-      }
-}
-render() {
-    
+    /*
+    We are only initializing the state(the state variable(s)) in the constructor,
+    nothing else.
+    */
+    this.state = {
+      monsters: [],
+      searchField: "",
+    };
+  }
+
+  /*
+  2:
+  After mounting the initial structure on to the DOM, it runs the lifecycle method to
+  re-render the component and after the lifecycle method the render() function runs again to
+  re mounting the component on to the DOM.
+  after this lifecycle method it's mandatory to ren the original render() method.
+  */
+  componentDidMount() {
+    //this fetch is going to be a promise.......
+    fetch("https://jsonplaceholder.typicode.com/users")
+      .then((response) => response.json())
+      .then((users) =>
+        this.setState(() => {
+          return { monsters: users };
+        })
+      );
+  }
+
+  onSearchChange = (event) => {
+    const searchField = event.target.value.toLocaleLowerCase();
+
+    this.setState(() => {
+      return { searchField };
+    });
+  }
+
+  //2: The render then runs because it runs to determine what to show on the page and
+  // to render the initial UI of the component(s) on to the DOM.
+  render() {
+    const filteredMOnsters = this.state.monsters.filter((monster) => {
+      return monster.name.toLocaleLowerCase().includes(this.state.searchField);
+    });
+
     return (
-      <div className='App'>
+      <div className="App">
         <h1>Monsters Rolodex</h1>
-        <div className='card-list'>
-          {this.state.monsters.map(monster => (
-            <Card props={monster}/>
+        <input
+          className="search-box"
+          type="search"
+          placeholder="search monsters"
+          onChange={this.onSearchChange}
+        />
+        <div className="card-list">
+          {filteredMOnsters.map((monster) => (
+            <Card name={monster.name} id={monster.id} email={monster.email} />
           ))}
         </div>
+        <button>Change heading </button>
       </div>
     );
   }
 }
 
 export default App;
-
