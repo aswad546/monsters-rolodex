@@ -38,6 +38,7 @@ class App extends Component {
       );
   }
 
+  //This is a method and going to run at the start for 1 time only, Optimized!
   onSearchChange = (event) => {
     const searchField = event.target.value.toLocaleLowerCase();
 
@@ -49,8 +50,12 @@ class App extends Component {
   //2: The render then runs because it runs to determine what to show on the page and
   // to render the initial UI of the component(s) on to the DOM.
   render() {
-    const filteredMOnsters = this.state.monsters.filter((monster) => {
-      return monster.name.toLocaleLowerCase().includes(this.state.searchField);
+    //Optimization process to reduce `this.state & this`
+    const { monsters, searchField } = this.state;
+    const {onSearchChange} = this;
+
+    const filteredMOnsters = monsters.filter((monster) => {
+      return monster.name.toLocaleLowerCase().includes(searchField);
     });
 
     return (
@@ -60,7 +65,7 @@ class App extends Component {
           className="search-box"
           type="search"
           placeholder="search monsters"
-          onChange={this.onSearchChange}
+          onChange={onSearchChange}
         />
         <div className="card-list">
           {filteredMOnsters.map((monster) => (
