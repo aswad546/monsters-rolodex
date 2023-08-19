@@ -1,15 +1,16 @@
 import React, { Component } from "react";
 
-import Card from "./components/card/card.jsx";
 import CardList from "./components/card-list/card-list.component.jsx";
 import SearchBox from "./components/search-box/search-box.component.jsx";
 
 import "./App.css";
-import "./components/card-list/card-list.styles.css";
 
 class App extends Component {
-  //1: This will run first....
-  //the constructor runs before anything in any class, and this is the universal in OOP.
+  /*
+  1:-
+  This will run first....
+  the constructor runs before anything in any class, and this is the universal in OOP.
+  */
   constructor() {
     super();
     /*
@@ -23,7 +24,7 @@ class App extends Component {
   }
 
   /*
-  2:
+  3:-
   After mounting the initial structure on to the DOM, it runs the lifecycle method to
   re-render the component and after the lifecycle method the render() function runs again to
   re mounting the component on to the DOM.
@@ -49,30 +50,28 @@ class App extends Component {
     });
   };
 
-  //2: The render then runs because it runs to determine what to show on the page and
-  // to render the initial UI of the component(s) on to the DOM.
+  /*
+  2:-
+  The render then runs because it runs to determine what to show on the page and to render the initial UI of the component(s) on to the DOM.
+  */
   render() {
     //Optimization process to reduce `this.state & this`
     const { monsters, searchField } = this.state;
     const { onSearchChange } = this;
 
+    //We will only see the filter monsters weather search-field in empty or not, that's the main logic...
     const filteredMOnsters = monsters.filter((monster) => {
       return monster.name.toLocaleLowerCase().includes(searchField);
     });
 
     return (
       <div className="App">
-        <h1>Monsters Rolodex</h1>
+        <h1 className="app-title">Monsters Rolodex</h1>
         <SearchBox
           onChangeHandler={onSearchChange}
           placeholder="Search Monsters"
-          className = "monsters-search-box"
+          className="monsters-search-box"
         />
-        {/* <div className="card-list">
-          {filteredMOnsters.map((monster) => (
-            <Card name={monster.name} id={monster.id} email={monster.email} />
-          ))}
-        </div> */}
 
         {/*Card list is only for displaying the monsters, what to show or what not to isn't of it's bizz*/}
         <CardList monsters={filteredMOnsters} />
