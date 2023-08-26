@@ -1,83 +1,56 @@
-import React, { Component } from "react";
+import { useState, useEffect } from "react";
 
 import CardList from "./components/card-list/card-list.component.jsx";
 import SearchBox from "./components/search-box/search-box.component.jsx";
 
 import "./App.css";
 
-class App extends Component {
-  /*
-  1:-
-  This will run first....
-  the constructor runs before anything in any class, and this is the universal in OOP.
-  */
-  constructor() {
-    super();
-    /*
-    We are only initializing the state(the state variable(s)) in the constructor,
-    nothing else.
-    */
-    this.state = {
-      monsters: [],
-      searchField: "",
-    };
-  }
+const App = () => {
 
-  /*
-  3:-
-  After mounting the initial structure on to the DOM, it runs the lifecycle method to
-  re-render the component and after the lifecycle method the render() function runs again to
-  re mounting the component on to the DOM.
-  after this lifecycle method it's mandatory to ren the original render() method.
-  */
-  componentDidMount() {
+  const [searchField, setSearchField] = useState("");
+  const [monsters, setMonsters] = useState([]);
+  const [filteredMOnsters, setFilteredMOnsters] = useState(monsters);
+
+  //This is a method and going to run at the start for 1 time only, Optimized!
+  const onSearchChange = (event) => {
+    const searchFieldString = event.target.value.toLocaleLowerCase();
+    setSearchField(searchFieldString);
+  };
+
+  //useEffect will be run for the first time own by own and after that it will only run when the Array of dependencies
+  // get some change in values. this Hook is going to produce side effects i.e==updating the MONSTERS state!
+  useEffect(() => {
+
     //this fetch is going to be a promise.......
     fetch("https://jsonplaceholder.typicode.com/users")
       .then((response) => response.json())
-      .then((users) =>
-        this.setState(() => {
-          return { monsters: users };
-        })
+      .then((users) => setMonsters(users)
       );
-  }
+  }, []);
 
-  //This is a method and going to run at the start for 1 time only, Optimized!
-  onSearchChange = (event) => {
-    const searchField = event.target.value.toLocaleLowerCase();
-
-    this.setState(() => {
-      return { searchField };
-    });
-  };
-
-  /*
-  2:-
-  The render then runs because it runs to determine what to show on the page and to render the initial UI of the component(s) on to the DOM.
-  */
-  render() {
-    //Optimization process to reduce `this.state & this`
-    const { monsters, searchField } = this.state;
-    const { onSearchChange } = this;
+  useEffect(() => {
 
     //We will only see the filter monsters weather search-field in empty or not, that's the main logic...
-    const filteredMOnsters = monsters.filter((monster) => {
+    const newFilteredMOnsters = monsters.filter((monster) => {
       return monster.name.toLocaleLowerCase().includes(searchField);
     });
 
-    return (
-      <div className="App">
-        <h1 className="app-title">Monsters Rolodex</h1>
-        <SearchBox
-          onChangeHandler={onSearchChange}
-          placeholder="Search Monsters"
-          className="monsters-search-box"
-        />
+    setFilteredMOnsters(newFilteredMOnsters);
+  }, [monsters, searchField])
 
-        {/*Card list is only for displaying the monsters, what to show or what not to isn't of it's bizz*/}
-        <CardList monsters={filteredMOnsters} />
-      </div>
-    );
-  }
-}
+  return (
+    <div className="App">
+      <h1 className="app-title">Monsters Rolodex</h1>
+      <SearchBox
+        onChangeHandler={onSearchChange}
+        placeholder="Search Monsters"
+        className="monsters-search-box"
+      />
+      {/*Card list is only for displaying the monsters, what to show or what not to isn't of it's bizz*/}
+      <CardList monsters={filteredMOnsters} />
+    </div>
+  );
+};
+
 
 export default App;
